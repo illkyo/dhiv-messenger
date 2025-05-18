@@ -7,7 +7,7 @@ export default function Register() {
 
   return (
     <View>
-      <RTLText className='text-3xl font-waheed p-3' style={{ letterSpacing: 2 }}>
+      <RTLText className='text-3xl font-waheed p-3'>
         ފޯން ނަންބަރު ޖައްސަޥާ
       </RTLText>
       <View className='w-full'>
@@ -19,7 +19,7 @@ export default function Register() {
           <Image className='size-4' source={require('@/assets/images/icons/rightarrow.png')} />
         </TouchableOpacity>
         <View className='flex flex-row'>
-          <View className='bg-white w-1/4 border border-t-0 border-gray-100 justify-center items-center'>
+          <View className='bg-white w-1/4 border border-t-0 border-r-0 border-gray-100 justify-center items-center'>
             <Text className='text-3xl font-opensans-light' style={{ letterSpacing: 1 }}>+960</Text>
           </View>
           <TextInput 
@@ -31,14 +31,14 @@ export default function Register() {
               }
             }}
             value={phoneNumber}
-            keyboardType= 'phone-pad'
+            keyboardType='phone-pad'
             maxLength={7}
             />
         </View>
       </View>
       <View className='self-center flex items-center gap-6 mt-7'>
         <TouchableOpacity className='flex justify-center items-center rounded-3xl bg-primary-200 w-[100px] h-[42px]'>
-            <Text className='text-white text-2xl font-waheed'>ކުރިއަށް</Text>
+          <Text className='text-white text-2xl font-waheed'>ކުރިއަށް</Text>
         </TouchableOpacity>
         <Text className='font-faruma text-gray-500 w-[178px] h-[42px] text-center'>
         އެސް.އެމް.އެސް ލިބޭ ނަންބަރެއްކަން ކަށަވަރުކުރުމަށް ފަހު ޖަށްސަވާ

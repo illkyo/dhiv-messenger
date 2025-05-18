@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import RTLText from '@/components/RTLText';
 import NumberField from '@/components/NumberField';
 import { useState } from 'react';
+import { router } from 'expo-router';
 
 const testOtp = '4545' // for testing
 
@@ -10,6 +11,19 @@ export default function enterOtp() {
   const [enteredOtpArray, setEnteredOtpArray] = useState(['', '', '', '']);
   const [warning, setWarning] = useState(false);
   const [subText, setSubText] = useState('އޯ.ޓީ.ޕީ ފީލްޑުތައް ހުސްކޮށް ނުބާއްވަ. 9-0 ނަންބަރެއް ޖައްސަވާ');
+
+  function checkOTP() {
+    if (enteredOtpArray.every((otpEntry) => otpEntry !== '')) {
+        if (enteredOtpArray.join('') === testOtp) {
+          setSubText('Entered correct OTP!');
+        } else {
+          setSubText('އޯ.ޓީ.ޕީ ރަނގަޅަށް ޖައްސަވާ');
+        }
+        setWarning(true);
+      } else {
+        setWarning(true);
+      }
+  }
 
   return (
     <View className='flex justify-center items-center h-[85%] gap-8'>
@@ -26,19 +40,8 @@ export default function enterOtp() {
       />
       <View className="flex gap-4 justify-center items-center">
         <TouchableOpacity
-          className='flex justify-center items-center rounded-3xl bg-gray-700 w-[75px] h-[40px]'
-          onPress={() => {
-            if (enteredOtpArray.every((otpEntry) => otpEntry !== '')) {
-              if (enteredOtpArray.join('') === testOtp) {
-                setSubText('Entered correct OTP!');
-              } else {
-                setSubText('އޯ.ޓީ.ޕީ ރަނގަޅަށް ޖައްސަވާ');
-              }
-              setWarning(true);
-            } else {
-              setWarning(true);
-            }
-          }}
+          className='flex justify-center items-center rounded-3xl bg-gray-600 w-[75px] h-[40px]'
+          onPress={() => {router.push('/register')}}
           >
           <Text className='text-white text-xl font-waheed'>ސަބްމިޓް</Text>
         </TouchableOpacity>

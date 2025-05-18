@@ -50,6 +50,18 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => <TabIcon title='އޯޓީޕީ' imageName="minus" focused={focused} />,
         }}
       />
+      <Tabs.Screen
+        name="login-choice"
+        options={{
+          tabBarIcon: ({ focused }) => <TabIcon title='ލޮގްއިން' imageName="star" focused={focused} />,
+        }}
+      />
+      <Tabs.Screen
+        name="make-profile"
+        options={{
+          tabBarIcon: ({ focused }) => <TabIcon title='ޕްރޮފައިލް' imageName="glass" focused={focused} />,
+        }}
+      />
     </Tabs>
   );
 }
