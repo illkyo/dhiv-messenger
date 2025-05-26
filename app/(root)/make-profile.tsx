@@ -1,8 +1,9 @@
-import { View, Text, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import RTLText from '@/components/RTLText';
 import { useState } from 'react';
 import DhivehiFormField from '@/components/DhivehiFormField';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MakeProfile() {
 
@@ -11,7 +12,7 @@ export default function MakeProfile() {
   const [email, setEmail] = useState('');
 
   return (
-    <View className='flex gap-8 p-8'>
+    <SafeAreaView className='flex gap-8 p-8'>
       <View className='flex justify-center items-center gap-2'>
         <View className='flex justify-center items-center gap-1'>
           <RTLText className='font-waheed text-3xl w-[60px]'>ޕްރޮފައިލް</RTLText>
@@ -34,5 +35,5 @@ export default function MakeProfile() {
         <DhivehiFormField title='ޕާސްވޯޑް' value={password} required={true} onFieldEntry={(input) => setPassword(input)}/>
         <DhivehiFormField title='އީމެއިލް' value={email} onFieldEntry={(input) => setEmail(input)}/>
       </View>
-    </View>
+    </SafeAreaView>
   )}

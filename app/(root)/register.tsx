@@ -1,15 +1,21 @@
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
 import { useState } from 'react';
 import RTLText from '@/components/RTLText';
+import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BackButton from '@/components/BackButton';
 
 export default function Register() {
   const [ phoneNumber, setPhoneNumber ] = useState('');
 
   return (
-    <View>
-      <RTLText className='text-3xl font-waheed p-3'>
-        ފޯން ނަންބަރު ޖައްސަޥާ
-      </RTLText>
+    <SafeAreaView>
+      <View className='flex flex-row-reverse justify-between p-3'>
+        <RTLText className='text-3xl font-waheed'>
+          ފޯން ނަންބަރު ޖައްސަޥާ
+        </RTLText>
+        <BackButton />
+      </View>
       <View className='w-full'>
         <TouchableOpacity className='bg-white border border-gray-100 flex-row items-center justify-between p-2'>
           <View className='flex-row items-center gap-2'>
@@ -37,12 +43,12 @@ export default function Register() {
         </View>
       </View>
       <View className='self-center flex items-center gap-6 mt-7'>
-        <TouchableOpacity className='flex justify-center items-center rounded-3xl bg-primary-200 w-[100px] h-[42px]'>
+        <TouchableOpacity className='flex justify-center items-center rounded-3xl bg-primary-200 w-[100px] h-[42px]' onPress={() => router.push('/enter-otp')}>
           <Text className='text-white text-2xl font-waheed'>ކުރިއަށް</Text>
         </TouchableOpacity>
         <Text className='font-faruma text-gray-500 w-[178px] h-[42px] text-center'>
         އެސް.އެމް.އެސް ލިބޭ ނަންބަރެއްކަން ކަށަވަރުކުރުމަށް ފަހު ޖަށްސަވާ
         </Text>
       </View>
-    </View>
-  )}
+    </SafeAreaView>
+  )};

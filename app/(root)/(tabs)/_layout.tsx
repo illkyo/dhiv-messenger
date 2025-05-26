@@ -38,7 +38,7 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => <TabIcon title='ކޯލް' imageName="phone" focused={focused} />,
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="register"
         options={{
           tabBarIcon: ({ focused }) => <TabIcon title='ރެޖިސްޓަރ' imageName="plus" focused={focused} />,
@@ -61,7 +61,7 @@ export default function TabLayout() {
         options={{
           tabBarIcon: ({ focused }) => <TabIcon title='ޕްރޮފައިލް' imageName="glass" focused={focused} />,
         }}
-      />
+      /> */}
     </Tabs>
   );
 }

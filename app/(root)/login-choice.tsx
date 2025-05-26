@@ -1,11 +1,16 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import RTLText from '@/components/RTLText';
 import { router } from 'expo-router';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BackButton from '@/components/BackButton';
 
 export default function Login() {
   return (
-    <View className='flex h-full gap-60 p-3'>
-      <RTLText className='text-3xl font-waheed' style={{ letterSpacing: 1.5 }}>ލޮގްއިން</RTLText>
+    <SafeAreaView className='flex h-full gap-60 p-3'>
+      <View className='flex flex-row justify-between'>
+        <BackButton />
+        <RTLText className='text-3xl font-waheed' style={{ letterSpacing: 1.5 }}>ލޮގްއިން</RTLText>
+      </View>
       <View className='flex gap-6 self-center'>
         <TouchableOpacity onPress={() => router.push('/otp-login')}>
           <Text className='text-3xl font-waheed text-primary-200' style={{ textAlign: 'right' }}>{'އޯޓީޕީ >>'}</Text>
@@ -17,6 +22,5 @@ export default function Login() {
           <Text className='text-base font-faruma text-blue-500' style={{ textAlign: 'right' }}>އާ އެކައުންޓެއް ހެއްދެވުމަށް</Text>
         </TouchableOpacity>
       </View>
-    </View>
-  )
-}
+    </SafeAreaView>
+  )};

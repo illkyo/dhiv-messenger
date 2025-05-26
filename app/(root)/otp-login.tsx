@@ -1,19 +1,18 @@
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import RTLText from '@/components/RTLText';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BackButton from '@/components/BackButton';
 
 export default function OTPLogin() {
 
   const [ phoneNumber, setPhoneNumber ] = useState('');
 
   return (
-    <View className='flex h-full gap-48'>
+    <SafeAreaView className='flex h-full gap-48'>
       <View className='flex flex-row justify-between p-3'>
-        <TouchableOpacity onPress={() => router.back()}>
-          <FontAwesome size={26} name='arrow-circle-left' color={'orange'}/>
-        </TouchableOpacity>
+        <BackButton />
         <RTLText className='text-3xl font-waheed' style={{ letterSpacing: 1 }}>
           އޯޓީޕީ ލޮގިން
         </RTLText>
@@ -46,9 +45,9 @@ export default function OTPLogin() {
               />
           </View>
         </View>
-        <TouchableOpacity className='flex justify-center items-center rounded-3xl bg-primary-100 w-[90] h-[42px] self-end'>
+        <TouchableOpacity className='flex justify-center items-center rounded-3xl bg-primary-100 w-[90] h-[42px] self-end' onPress={() => router.push('/enter-otp')}>
           <RTLText className='text-white text-2xl font-waheed' style={{ letterSpacing: 0.8 }}>ކުރިއަށް</RTLText>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   )}

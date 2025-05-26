@@ -1,8 +1,9 @@
 import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import RTLText from '@/components/RTLText';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BackButton from '@/components/BackButton';
 
 export default function PasswordLogin() {
 
@@ -10,11 +11,9 @@ export default function PasswordLogin() {
   const [ password, setPassword ] = useState('');
 
   return (
-    <View className='flex h-full gap-48'>
+    <SafeAreaView className='flex h-full gap-48'>
       <View className='flex flex-row justify-between p-3'>
-        <TouchableOpacity onPress={() => router.back()}>
-          <FontAwesome size={26} name='arrow-circle-left' color={'orange'}/>
-        </TouchableOpacity>
+        <BackButton />
         <RTLText className='text-3xl font-waheed' style={{ letterSpacing: 1 }}>
           ޕާސްވޯޑް ލޮގިން
         </RTLText>
@@ -64,5 +63,5 @@ export default function PasswordLogin() {
           <RTLText className='text-white text-2xl font-waheed' style={{ letterSpacing: 0.8 }}>ލޮގްއިން</RTLText>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   )}

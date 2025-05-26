@@ -39,6 +39,6 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack screenOptions={{ headerShown: false, statusBarHidden: false }} />
-  
+  return <Stack screenOptions={{ headerShown: false, statusBarHidden: false, statusBarStyle: 'dark' }} />
+
 };
