@@ -4,7 +4,8 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import './global.css'
+import './global.css';
+import GlobalProvider from "@/lib/global-provider";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -39,6 +40,9 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack screenOptions={{ headerShown: false, statusBarHidden: false, statusBarStyle: 'dark' }} />
-
+  return (
+    <GlobalProvider>
+      <Stack screenOptions={{ headerShown: false, statusBarHidden: false, statusBarStyle: 'dark' }} />
+    </GlobalProvider>
+  )
 };

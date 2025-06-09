@@ -1,21 +1,50 @@
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
-import { useState } from 'react';
-import { router } from 'expo-router';
+import { View, Text, Image, TextInput, TouchableOpacity, Alert } from 'react-native'
+import { useState, useEffect } from 'react';
 import RTLText from '@/components/RTLText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BackButton from '@/components/BackButton';
+import { supabase } from '@/lib/supabase';
+import { router } from 'expo-router';
 
-export default function PasswordLogin() {
+export default function OTPLogin() {
 
+  const [ countryCode, setCountryCode ] = useState('+960');
   const [ phoneNumber, setPhoneNumber ] = useState('');
-  const [ password, setPassword ] = useState('');
+  const [ loginButtonDisabled, setLoginButtonDisabled ] = useState(true);
+  const [ loading, setLoading ] = useState(false);
+
+  async function login() {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signInWithOtp({
+        phone: countryCode + phoneNumber
+      });
+      if (error) throw error;
+      router.push(`/enter-otp/${countryCode+phoneNumber}`);
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+        console.log(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (phoneNumber.length === 7) {
+      setLoginButtonDisabled(false);
+    } else {
+      setLoginButtonDisabled(true);
+    }
+  }, [phoneNumber]);
 
   return (
     <SafeAreaView className='flex h-full gap-48'>
       <View className='flex flex-row justify-between p-3'>
         <BackButton />
         <RTLText className='text-3xl font-waheed' style={{ letterSpacing: 1 }}>
-          ޕާސްވޯޑް ލޮގިން
+          އޯޓީޕީ ލޮގިން
         </RTLText>
       </View>
       <View className='w-[80%] self-center flex gap-6'>
@@ -30,10 +59,10 @@ export default function PasswordLogin() {
           </TouchableOpacity>
           <View className='flex flex-row'>
             <View className='bg-white w-1/4 border rounded-bl-2xl border-t-0 border-r-0 border-gray-100 justify-center items-center'>
-              <Text className='text-2xl font-opensans-light' style={{ letterSpacing: 1 }}>+960</Text>
+              <Text className='text-2xl font-opensans-light' style={{ letterSpacing: 1 }}>{countryCode}</Text>
             </View>
             <TextInput
-              className='bg-white border flex-1 border-t-0 rounded-br-2xl border-gray-100 font-opensans-light text-2xl'
+              className='bg-white border flex-1 border-t-0 rounded-br-2xl border-gray-100 font-opensans-light text-2xl h-14'
               style={{ letterSpacing: 1 }}
               onChangeText={(input) => {
                 if ((parseInt(input) || input === '')) {
@@ -46,20 +75,11 @@ export default function PasswordLogin() {
               />
           </View>
         </View>
-        <View>
-          <Text className='font-waheed text-gray-500 ml-3 text-2xl'>ޕާސްވޯޑް</Text>
-          <View className='bg-white border rounded-2xl border-gray-100 pl-2'>
-            <TextInput
-              className='text-2xl'
-              onChangeText={(i) => {
-                setPassword(i)
-              }}
-              value={password}
-              secureTextEntry={true}
-            />
-          </View>
-        </View>
-        <TouchableOpacity className='flex justify-center items-center rounded-3xl bg-primary-100 w-[90] h-[42px] self-end'>
+        <TouchableOpacity 
+          className={`flex justify-center items-center rounded-3xl w-[90] h-[42px] self-end ${loginButtonDisabled || loading ? 'bg-gray-400' : 'bg-primary-200'}`} 
+          disabled={loginButtonDisabled}
+          onPress={() => login()}
+          >
           <RTLText className='text-white text-2xl font-waheed' style={{ letterSpacing: 0.8 }}>ލޮގްއިން</RTLText>
         </TouchableOpacity>
       </View>
