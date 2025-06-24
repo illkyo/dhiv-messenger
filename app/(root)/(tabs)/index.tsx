@@ -1,5 +1,4 @@
 import { Text, View, Alert, TouchableOpacity } from 'react-native';
-import { Link } from 'expo-router';
 import { useGlobalContext } from '@/lib/global-provider';
 import { Redirect } from 'expo-router';
 import { supabase } from '@/lib/supabase';
@@ -23,7 +22,7 @@ export default function TabOneScreen() {
     }
   }
 
-  // if (!profile) return <Redirect href='make-profile' />
+  if (!profile) return <Redirect href='make-profile' />
   
   return (
     <View className='flex flex-1 justify-center items-center bg-red'>

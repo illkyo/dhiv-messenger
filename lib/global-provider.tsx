@@ -21,38 +21,37 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
 
-    // async function fetchProfile(session: Session) {
-    //   try {
-    //     setLoading(true)
-    //     if (!session.user) throw new Error('No user on the session!')
+    async function fetchProfile(session: Session) {
+      try {
+        setLoading(true)
+        if (!session.user) throw new Error('No user on the session!')
 
-    //     const { data, error, status } = await supabase
-    //       .from('profiles')
-    //       .select(`id, name, avatar, email`)
-    //       .eq('id', session.user.id)
-    //       .single()
+        const { data, error, status } = await supabase
+          .from('profiles')
+          .select(`id, name, email, avatar`)
+          .eq('id', session.user.id)
+          .single()
           
-    //     if (error && status !== 406) {
-    //       throw error
-    //     }
-
-    //     if (data) {
-    //       setProfile(data);
-    //     }
-    //   } catch (error) {
-    //     if (error instanceof Error) {
-    //       Alert.alert(error.message)
-    //       console.log(error.message)
-    //     }
-    //   } finally {
-    //     setLoading(false)
-    //   }
-    // };
+        if (error && status !== 406) {
+          throw error
+        }
+        if (data) {
+          setProfile(data);
+        }
+      } catch (error) {
+        if (error instanceof Error) {
+          Alert.alert(error.message)
+          console.log(error.message)
+        }
+      } finally {
+        setLoading(false)
+      }
+    };
 
     async function setSessionAndProfile(session: Session | null) {
       setLoading(true)
       setSession(session);
-      // if (session) await fetchProfile(session);
+      session ? await fetchProfile(session) : setProfile(null);
       setTimeout(() => {
         setLoading(false);
       }, 1000)
@@ -73,6 +72,10 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     console.log(`--- LOADING --- ${loading.toString().toUpperCase()}`);
   }, [loading])
+
+  useEffect(() => {
+    console.log(`--- PROFILE --- `, profile);
+  }, [profile])
 
   if (loading) {
     return (
