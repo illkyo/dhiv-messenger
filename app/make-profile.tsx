@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Alert, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Alert, Image, ActivityIndicator } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import RTLText from '@/components/RTLText';
 import { useState, useEffect } from 'react';
@@ -11,14 +11,16 @@ import * as ImagePicker from 'expo-image-picker';
 export default function MakeProfile() {
   
   const { session } = useGlobalContext();
-  const defaultAvatar = supabase.storage.from('avatars').getPublicUrl('default-avatar.jpeg').data.publicUrl
+  const defaultAvatar = supabase.storage.from('avatars').getPublicUrl('default-avatar.jpeg').data.publicUrl;
 
-  const [avatarImage, setAvatarImage] = useState(defaultAvatar);
+  const [avatarImage, setAvatarImage] = useState<ImagePicker.ImagePickerAsset | string>(defaultAvatar);
+  const [avatarChanged, setAvatarChanged] = useState(false);
   const [name, setName] = useState('');
   // const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [submitButtonDisabled, setSubmitButtonDisabled] = useState(true);
+  const [uploading, setUploading] = useState(false);
 
   async function submitProfile() {
     try {
@@ -30,7 +32,7 @@ export default function MakeProfile() {
           email: validateEmail(email) ? email : null,
           avatar: defaultAvatar
         })
-
+      
       if (error) throw error
     } catch (error) {
       if (error instanceof Error) {
@@ -42,28 +44,67 @@ export default function MakeProfile() {
     }
   };
 
-  async function uploadAvatar() {
-    const { status, granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    console.log(`--- MEDIA LIBRARY PERMISSION --- ${status}`);
-    if (!granted) {
-        Alert.alert("Access to media library not granted.");
-        return
-    };
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
-      allowsEditing: true,
-      allowsMultipleSelection: false,
-      aspect:[1, 1],
-      quality: 1,
-    });
-
-    if (result.canceled || result.assets.length === 0 || !result.assets) {
-      console.log('No image was selected.');
-    } else {
-      const image = result.assets[0];
-      console.log(`--- IMAGE --- ${image}`);
+  async function uploadAvatar(avatarImage: ImagePicker.ImagePickerAsset) {
+    try {
+      setUploading(true)
+      const arrayBuffer = await fetch(avatarImage.uri).then((res) => res.arrayBuffer());
+      const fileExt = avatarImage.uri?.split('.').pop()?.toLowerCase() ?? 'jpeg';
+      const path = `${Date.now()}.${fileExt}`;
+      const { data, error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, arrayBuffer, {
+          contentType: avatarImage.mimeType ?? 'image/jpeg',
+      });
+      if (uploadError) {
+        throw uploadError
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+        console.log(error.message);
+      } else {
+        throw error
+      };
+    } finally {
+      setUploading(true);
     }
+  };
 
+  async function changeAvatar() {
+    try {
+      const { status, granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      console.log(`--- MEDIA LIBRARY PERMISSION --- ${status}`);
+      if (!granted) {
+          Alert.alert("Access to media library not granted.");
+          return
+      };
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: true,
+        allowsMultipleSelection: false,
+        aspect:[1, 1],
+        quality: 1,
+      });
+
+      if (result.canceled || result.assets.length === 0 || !result.assets) {
+        console.log('No image was selected.');
+      } else {
+        const image = result.assets[0];
+        console.log(`--- IMAGE --- ${image}`);
+        if (!image.uri) {
+          throw new Error('No Image URI');
+        };
+        setAvatarImage(image);
+        setAvatarChanged(true);
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        Alert.alert(error.message);
+        console.log(error.message);
+      } else {
+        throw error
+      }
+    } 
   };
 
   function validateEmail(email: string) {
@@ -87,12 +128,24 @@ export default function MakeProfile() {
           <Text className='font-faruma text-base text-gray-500'>ފީލްޑުތައް ފުރުއްވާ</Text>
         </View>
         <View>
-          <TouchableOpacity className='flex justify-center items-center relative' onPress={() => {uploadAvatar()}}>
-            <Image className='size-20 rounded-full' source={{ uri: avatarImage }} />
-            <TouchableOpacity className='bg-primary-200 size-[22px] rounded-full flex justify-center items-center absolute bottom-0 right-0'>
-              <FontAwesome size={10} name='plus' color='white'/>
+          {
+            uploading ?       
+            <View className="bg-white flex justify-center items-center rounded-full size-20">
+              <ActivityIndicator className="text-primary-300" size='large' />
+            </ View>
+            :
+            <TouchableOpacity className='flex justify-center items-center relative' onPress={() => {changeAvatar()}}>
+              {
+                typeof avatarImage === 'string' ?
+                <Image className='size-20 rounded-full' source={{ uri: avatarImage }} />
+                :
+                <Image className='size-20 rounded-full' source={{ uri: avatarImage.uri }} />
+              }
+              <TouchableOpacity className='bg-primary-200 size-[22px] rounded-full flex justify-center items-center absolute bottom-0 right-0'>
+                <FontAwesome size={10} name='plus' color='white'/>
+              </TouchableOpacity>
             </TouchableOpacity>
-          </TouchableOpacity>
+          }
         </View>
       </View>
       <View className='flex gap-5'>
@@ -104,6 +157,12 @@ export default function MakeProfile() {
         className={`flex justify-center self-center items-center rounded-3xl w-[100px] h-[42px] ${submitButtonDisabled || loading ? 'bg-gray-400' : 'bg-primary-200'}`}
         onPress={() => {submitProfile()}}
         disabled={submitButtonDisabled || loading}
+        >
+        <Text className='text-white text-2xl font-waheed'>ސަބްމިޓް</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        className={`flex justify-center self-center items-center rounded-3xl w-[100px] h-[42px] bg-primary-200`}
+        onPress={() => {console.log(avatarImage)}}
         >
         <Text className='text-white text-2xl font-waheed'>ސަބްމިޓް</Text>
       </TouchableOpacity>
