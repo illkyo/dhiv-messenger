@@ -9,6 +9,7 @@ interface GlobalContextType {
   session: Session | null;
   profile: Profile | null;
   loading: boolean;
+  fetchProfile: (session: Session) => Promise<void>;
 }
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -18,10 +19,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-
-    async function fetchProfile(session: Session) {
+  
+  async function fetchProfile(session: Session) {
       try {
         setLoading(true)
         if (!session.user) throw new Error('No user on the session!')
@@ -57,6 +56,8 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
       }, 1000)
     };
 
+  useEffect(() => {
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSessionAndProfile(session);
     });
@@ -86,7 +87,7 @@ export const GlobalProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <GlobalContext.Provider value={{ session, profile, loading }}>
+    <GlobalContext.Provider value={{ session, profile, loading, fetchProfile }}>
       {children}
     </GlobalContext.Provider>
   );

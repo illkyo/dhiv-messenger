@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 
 export default function MakeProfile() {
   
-  const { session } = useGlobalContext();
+  const { session, fetchProfile } = useGlobalContext();
   const defaultAvatar = supabase.storage.from('avatars').getPublicUrl('default-avatar.jpeg').data.publicUrl;
 
   const [avatarImage, setAvatarImage] = useState<ImagePicker.ImagePickerAsset | string>(defaultAvatar);
@@ -32,8 +32,8 @@ export default function MakeProfile() {
           email: validateEmail(email) ? email : null,
           avatar: defaultAvatar
         })
-      
-      if (error) throw error
+        if (session) await fetchProfile(session)
+        if (error) throw error
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
