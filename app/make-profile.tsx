@@ -13,7 +13,7 @@ export default function MakeProfile() {
   const { session, fetchProfile } = useGlobalContext();
   const defaultAvatar = supabase.storage.from('avatars').getPublicUrl('default-avatar.jpeg').data.publicUrl;
 
-  const [avatarImage, setAvatarImage] = useState<ImagePicker.ImagePickerAsset | string>(defaultAvatar);
+  const [avatarImage, setAvatarImage] = useState<ImagePicker.ImagePickerAsset>();
   const [avatarChanged, setAvatarChanged] = useState(false);
   const [name, setName] = useState('');
   // const [password, setPassword] = useState('');
@@ -30,10 +30,10 @@ export default function MakeProfile() {
         .insert({  
           name: name,
           email: validateEmail(email) ? email : null,
-          avatar: defaultAvatar
+          avatar: avatarChanged && avatarImage ? await uploadAvatar(avatarImage) : defaultAvatar
         })
-        if (session) await fetchProfile(session)
         if (error) throw error
+        if (session) await fetchProfile(session)
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message)
@@ -58,6 +58,7 @@ export default function MakeProfile() {
       if (uploadError) {
         throw uploadError
       };
+      return data.fullPath
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message);
@@ -136,10 +137,10 @@ export default function MakeProfile() {
             :
             <TouchableOpacity className='flex justify-center items-center relative' onPress={() => {changeAvatar()}}>
               {
-                typeof avatarImage === 'string' ?
-                <Image className='size-20 rounded-full' source={{ uri: avatarImage }} />
+                avatarChanged ?
+                <Image className='size-20 rounded-full' source={{ uri: avatarImage?.uri }} />
                 :
-                <Image className='size-20 rounded-full' source={{ uri: avatarImage.uri }} />
+                <Image className='size-20 rounded-full' source={{ uri: defaultAvatar }} />
               }
               <TouchableOpacity className='bg-primary-200 size-[22px] rounded-full flex justify-center items-center absolute bottom-0 right-0'>
                 <FontAwesome size={10} name='plus' color='white'/>
