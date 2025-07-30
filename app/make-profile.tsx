@@ -58,7 +58,8 @@ export default function MakeProfile() {
       if (uploadError) {
         throw uploadError
       };
-      return data.fullPath
+      console.log(data)
+      return data.path
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert(error.message);
