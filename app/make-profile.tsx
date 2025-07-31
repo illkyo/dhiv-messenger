@@ -162,11 +162,5 @@ export default function MakeProfile() {
         >
         <Text className='text-white text-2xl font-waheed'>ސަބްމިޓް</Text>
       </TouchableOpacity>
-      <TouchableOpacity
-        className={`flex justify-center self-center items-center rounded-3xl w-[100px] h-[42px] bg-primary-200`}
-        onPress={() => {console.log(avatarImage)}}
-        >
-        <Text className='text-white text-2xl font-waheed'>ސަބްމިޓް</Text>
-      </TouchableOpacity>
     </SafeAreaView>
   )}

@@ -27,14 +27,16 @@ export default function TabOneScreen() {
   if (!profile) return <Redirect href='make-profile' />
   
   return (
-    <SafeAreaView className='flex flex-1 justify-center items-center'>
-      <Avatar url={profile.avatar} />
-      <TouchableOpacity 
-          className={`flex justify-center items-center rounded-3xl w-[100px] h-[42px] ${loading ? 'bg-gray-400' : 'bg-primary-200'}`} 
-          onPress={() => logout()} 
-          disabled={loading}
-      >
-        <Text className='text-white text-2xl font-rubik'>Logout</Text>
-      </TouchableOpacity>
+    <SafeAreaView className='flex flex-1 items-center border border-red-500'>
+      <View className='border border-red-500'>
+        <Avatar url={profile.avatar} />
+        <TouchableOpacity 
+            className={`flex justify-center items-center rounded-3xl w-[100px] h-[42px] ${loading ? 'bg-gray-400' : 'bg-primary-200'}`} 
+            onPress={() => logout()} 
+            disabled={loading}
+        >
+          <Text className='text-white text-2xl font-rubik'>Logout</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   )};
